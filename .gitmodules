@@ -1,0 +1,3 @@
+[submodule "HmMediaSDKApp/app/src/main/cpp/mediaserver"]
+	path = HmMediaSDKApp/app/src/main/cpp/mediaserver
+	url = https://github.com/akumrao/mediaserver.git
