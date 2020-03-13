@@ -10,42 +10,14 @@ Java_com_harman_hmmediasdkapp_MainActivity_stringFromJNI(
 }
 
 
-#include "PingThread.h"
-#include "Download.h"
-#include "Upload.h"
-#include "Speed.h"
-#include "Signal.h"
+
+#include "HmSdkUpload.h"
+
 
 TickContext g_ctx;
 
 
 #include <android/log.h>
-
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_harman_vns_MainActivity_stringFromJNI(  JNIEnv *env, jobject /* this */) {
-
-    std::string hello = "Ping www.yahoo.com";
-    LOGE("Failed to AttachCurrentThread, ErrorCode = %d", 100);
-    return env->NewStringUTF(hello.c_str());
-}
-
-
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_harman_vns_ui_PingFragment_LocationJNI( JNIEnv *env, jobject jobj, jdouble j1, jdouble j2) {
-
-    //Logger::instance().add(new RemoteChannel("debug", Level::Trace, "10.99.234.126"));
-
-    Logger::instance().add(new RemoteChannel("debug", Level::Remote, "10.99.109.11"));
-
-    double j1d = static_cast<double>(j1);
-    double j2d = static_cast<double>(j2);
-
-    LTrace("location " ,j1d, " , ", j2d );
-
-}
-
-
 
 
 /* This is a trivial JNI example where we use a native method
@@ -90,7 +62,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 
     Logger::instance().add(new RemoteChannel("debug", Level::Remote, "10.99.109.11"));
 
-    //Logger::instance().add(new ConsoleChannel("debug", Level::Trace ));
+   // Logger::instance().add(new ConsoleChannel("debug", Level::Trace ));
 
 
     LTrace("OnLoad");
@@ -103,17 +75,19 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
         return JNI_ERR; // JNI version not supported.
     }
 
-    jclass  clz = env->FindClass("com/harman/vns/JniHandler");
-    g_ctx.jniHelperClz = (jclass)env->NewGlobalRef( clz);
+    //jclass  clz = env->FindClass("com/harman/vns/JniHandler");
+   // g_ctx.jniHelperClz = (jclass)env->NewGlobalRef( clz);
 
-    jmethodID  jniHelperCtor = env->GetMethodID( g_ctx.jniHelperClz, "<init>", "()V");
+   // jmethodID  jniHelperCtor = env->GetMethodID( g_ctx.jniHelperClz, "<init>", "()V");
 
 
+//
+//    jobject    handler = env->NewObject( g_ctx.jniHelperClz,
+//                                         jniHelperCtor);
+//    g_ctx.jniHelperObj = env->NewGlobalRef( handler);
+//    queryRuntimeInfo(env, g_ctx.jniHelperObj);
 
-    jobject    handler = env->NewObject( g_ctx.jniHelperClz,
-                                         jniHelperCtor);
-    g_ctx.jniHelperObj = env->NewGlobalRef( handler);
-    queryRuntimeInfo(env, g_ctx.jniHelperObj);
+    hm::init();
 
     g_ctx.done = 0;
     g_ctx.mainActivityObj = NULL;
@@ -216,44 +190,44 @@ void*  UpdateTicks(void* context) {
 
 
 
-Thread *thread = nullptr;
+//Thread *thread = nullptr;
 
 
-void   start(JNIEnv *env, jobject instance, jstring jcmd , jstring jurl) {
+void   start(JNIEnv *env, jobject instance, jstring jdriverid , jstring jmetadata, jstring jpath ) {
 
-    const char *c_cmd = env->GetStringUTFChars(jcmd, NULL);
-    std::string cmd = c_cmd;
+    const char *c_driverid = env->GetStringUTFChars(jdriverid, NULL);
+    std::string driverid = c_driverid;
 
-    const char *c_url = env->GetStringUTFChars(jurl, NULL);
-    std::string url = c_url;
+    const char *c_metadata = env->GetStringUTFChars(jmetadata, NULL);
+    std::string metadata = c_metadata;
 
 
-    LTrace("StartTicks ", cmd )
+    const char *c_path = env->GetStringUTFChars(jpath, NULL);
+    std::string path = c_path;
 
-    LTrace("StartTicks ", url )
+
+    LTrace("StartTicks ", driverid )
+
+    LTrace("StartTicks ", path )
 
     static int inc = 0;
 
-    if (!thread)
-    {
-        if( cmd == std::string("Download" ))
-            thread = new Download(url);
-        else if( cmd == std::string("Upload" ))
-            thread = new Upload(url);
-        else if( cmd == std::string("Speed" ))
-            thread = new Speed();
-        else if( cmd == std::string("Signal" ))
-            thread = new Signal(url);
-        else {
-            thread = new PingThread(url);
-            //if(++inc % 2 )
-            //  thread = new PingThread(url); //thread = new Signal(url);
-            //  else
-            //    thread = new Speed();  //  //thread = new Speed();
-        }
-    }
-    else
-        return ;
+    hm::upload(driverid, metadata, path);
+
+//    if (!thread)
+//    {
+//        if( cmd == std::string("Upload" ))
+//            thread = new Upload(url);
+//        else {
+//            //thread = new PingThread(url);
+//            //if(++inc % 2 )
+//            //  thread = new PingThread(url); //thread = new Signal(url);
+//            //  else
+//            //    thread = new Speed();  //  //thread = new Speed();
+//        }
+//    }
+//    else
+//        return ;
 
 
 
@@ -261,52 +235,43 @@ void   start(JNIEnv *env, jobject instance, jstring jcmd , jstring jurl) {
     g_ctx.mainActivityClz = (jclass)env->NewGlobalRef( clz);
     g_ctx.mainActivityObj = env->NewGlobalRef(instance);
 
-    thread->start();
+   // thread->start();
 }
 
 
 void  stop(JNIEnv *env, jobject instance) {
     LTrace("Stop Ticks");
 
-    if( thread) {
-        thread->stop();
-
-        // sleep(1);
-        delete thread;
-        thread = nullptr;
-
-        LTrace("pingThread delete over");
-
-        // release object we allocated from StartTicks() function
-        env->DeleteGlobalRef(g_ctx.mainActivityClz);
-        env->DeleteGlobalRef(g_ctx.mainActivityObj);
-        g_ctx.mainActivityObj = NULL;
-        g_ctx.mainActivityClz = NULL;
-
-        LTrace("Stop Ticks over");
-    }
+//    if( thread) {
+//        thread->stop();
+//
+//        // sleep(1);
+//        delete thread;
+//        thread = nullptr;
+//
+//        LTrace("pingThread delete over");
+//
+//        // release object we allocated from StartTicks() function
+//        env->DeleteGlobalRef(g_ctx.mainActivityClz);
+//        env->DeleteGlobalRef(g_ctx.mainActivityObj);
+//        g_ctx.mainActivityObj = NULL;
+//        g_ctx.mainActivityClz = NULL;
+//
+//        LTrace("Stop Ticks over");
+//    }
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_harman_vns_ui_DownloadFragment_startTicks(JNIEnv *env, jobject instance ,jstring jcmd , jstring jurl ) {
-    start(env,instance, jcmd,jurl );
+Java_com_harman_hmmediasdkapp_MainActivity_startTicks(JNIEnv *env, jobject instance ,jstring driverid , jstring metadata, jstring path ) {
+    start(env,instance, driverid, metadata, path );
 }
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_harman_vns_ui_PingFragment_startTicks(JNIEnv *env, jobject instance ,jstring jcmd , jstring jurl ) {
-    start(env,instance, jcmd,jurl );
+Java_com_harman_hmmediasdkapp_MainActivity_next(JNIEnv *env, jobject instance ,jstring jcmd , jstring jurl ) {
+//    start(env,instance, jcmd,jurl );
 }
-/*
- * Interface to Java side to stop ticks:
- *    we need to hold and make sure our native thread has finished before return
- *    for a clean shutdown. The caller is from onPause
- */
-extern "C" JNIEXPORT void JNICALL
-Java_com_harman_vns_ui_DownloadFragment_StopTicks(JNIEnv *env, jobject instance) {
 
-    stop(env,instance );
-}
 
 /*
  * Interface to Java side to stop ticks:
@@ -314,7 +279,7 @@ Java_com_harman_vns_ui_DownloadFragment_StopTicks(JNIEnv *env, jobject instance)
  *    for a clean shutdown. The caller is from onPause
  */
 extern "C" JNIEXPORT void JNICALL
-Java_com_harman_vns_ui_PingFragment_StopTicks(JNIEnv *env, jobject instance) {
+Java_com_harman_hmmediasdkapp_MainActivity_StopTicks(JNIEnv *env, jobject instance) {
 
     stop(env,instance);
 }

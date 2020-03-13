@@ -1,9 +1,10 @@
 package com.harman.hmmediasdkapp;
 
+import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.TextView;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,9 +18,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Example of a call to a native method
+        String metadata = "{filename:driver-1234-1232323.mp4, gps-latitude:28.674109, gps-longitude:77.438009, timestamp:20200309194530, uploadmode:normal}";
+
+        //socket.upload( filename, , metadata);
+
+        startTicks("Upload", metadata, "/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4");
+
         TextView tv = findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        tv.setText("arvind");
+    }
+
+
+    /*
+     * A function calling from JNI to update current timer
+     */
+    @Keep
+    private void updateTimer(final String msg ) {
+
+        Log.e("JniHandler1", "Native Err: " + msg);
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                //MainActivity.this.tickView.setText(msg + " " );
+                TextView tv = findViewById(R.id.sample_text);
+                tv.setText(msg);
+            }
+        });
     }
 
     /**
@@ -27,4 +54,6 @@ public class MainActivity extends AppCompatActivity {
      * which is packaged with this application.
      */
     public native String stringFromJNI();
+
+    public native void startTicks(String driverid, String metadata, String path);
 }
