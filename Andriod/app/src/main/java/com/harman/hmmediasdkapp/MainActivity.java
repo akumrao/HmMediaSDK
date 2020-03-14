@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         //socket.upload( filename, , metadata);
 
-        startTicks("Upload", metadata, "/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4");
+        upload("Upload", metadata, "/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4");
 
         TextView tv = findViewById(R.id.sample_text);
         tv.setText("arvind");
@@ -55,5 +55,5 @@ public class MainActivity extends AppCompatActivity {
      */
     public native String stringFromJNI();
 
-    public native void startTicks(String driverid, String metadata, String path);
+    public native void upload(String driverid, String metadata, String path);
 }

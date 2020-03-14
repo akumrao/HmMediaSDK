@@ -193,7 +193,7 @@ void*  UpdateTicks(void* context) {
 //Thread *thread = nullptr;
 
 
-void   start(JNIEnv *env, jobject instance, jstring jdriverid , jstring jmetadata, jstring jpath ) {
+void   upload(JNIEnv *env, jobject instance, jstring jdriverid , jstring jmetadata, jstring jpath ) {
 
     const char *c_driverid = env->GetStringUTFChars(jdriverid, NULL);
     std::string driverid = c_driverid;
@@ -262,8 +262,8 @@ void  stop(JNIEnv *env, jobject instance) {
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_harman_hmmediasdkapp_MainActivity_startTicks(JNIEnv *env, jobject instance ,jstring driverid , jstring metadata, jstring path ) {
-    start(env,instance, driverid, metadata, path );
+Java_com_harman_hmmediasdkapp_MainActivity_upload(JNIEnv *env, jobject instance ,jstring driverid , jstring metadata, jstring path ) {
+    upload(env,instance, driverid, metadata, path );
 }
 
 

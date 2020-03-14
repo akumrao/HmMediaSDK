@@ -14,14 +14,45 @@ void sendJavaMsg(JNIEnv *env, jobject instance,  jmethodID func,const char* msg)
 namespace hm {
 
 
-    //const std::string ip = "52.14.171.173";
+
+    const std::string ip = "18.228.58.178";
     //const std::string ip = "127.0.0.1";
-    const std::string ip = "10.99.234.1";
+    //const std::string ip = "192.168.0.2";
 
     const int port = 47001;
 
 
     hmTcpClient *thread = nullptr ;
+
+
+
+     void UploadedPercentage(const std::string& file, const int& prog)
+    {
+        SInfo << "Percentage uploaded " <<prog;
+
+
+        TickContext *pctx = (TickContext*) &g_ctx;
+        JavaVM *javaVM = pctx->javaVM;
+        JNIEnv *env;
+        jint res = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
+        if (res != JNI_OK) {
+            res = javaVM->AttachCurrentThread( &env, NULL);
+            if (JNI_OK != res) {
+                LOGE("Failed to AttachCurrentThread, ErrorCode = %d", res);
+                return ;
+            }
+        }
+
+        std::string percent = file + " :" +  std::to_string(prog );
+
+        jmethodID timerId = env->GetMethodID( pctx->mainActivityClz,
+                                              "updateTimer", "(Ljava/lang/String;)V");
+
+        if (timerId)
+            sendJavaMsg(env, pctx->mainActivityObj, timerId, percent.c_str()  );
+
+
+    }
 
     void init( )
     {
@@ -33,14 +64,19 @@ namespace hm {
 
     void upload(  const std::string driverId, const std::string metaDataJson, const std::string file)
     {
+        using namespace std::placeholders;
+
         thread->upload( file, driverId, metaDataJson);
         thread->start();
 
-        thread->fnUpdateProgess = [&](const std::string str, int progess) {
+//        thread->fnUpdateProgess = [&](const std::string str, int progess) {
+//
+//            SInfo << "Percentage uploaded " <<progess;
+//
+//        };
 
-            SInfo << "Percentage uploaded " <<progess;
+        thread->fnUpdateProgess = std::bind(&UploadedPercentage, _1, _2);
 
-        };
 
     }
 

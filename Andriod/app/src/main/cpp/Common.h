@@ -28,4 +28,4 @@ typedef struct tick_context {
 } TickContext;
 
 
-#endif MED_COMMON_H
+#endif// MED_COMMON_H
