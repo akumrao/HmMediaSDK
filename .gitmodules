@@ -1,6 +1,6 @@
 [submodule "HmMediaSDKApp/app/src/main/cpp/mediaserver"]
-	path = HmMediaSDKApp/app/src/main/cpp/mediaserver
+	path = Andriod/app/src/main/cpp/mediaserver
 	url = https://github.com/akumrao/mediaserver.git
 [submodule "HmMediaSDKIOS/mediaserver"]
-	path = HmMediaSDKIOS/mediaserver
+	path = IOS/mediaserver
 	url = https://github.com/akumrao/mediaserver.git
