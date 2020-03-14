@@ -14,8 +14,8 @@ using namespace base;
 namespace hm {
 
 
-    //const std::string ip = "52.14.171.173";
-    const std::string ip = "127.0.0.1";
+    const std::string ip = "18.228.58.178";
+    //const std::string ip = "127.0.0.1";
     //const std::string ip = "10.99.234.1";
 
     const int port = 47001;
