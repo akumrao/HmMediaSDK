@@ -1,12 +1,10 @@
 
 
 #include "HmSdkUpload.h"
-
-using namespace base;
-
+#include <unistd.h>
 
 int main(int argc, char** argv) {
-    Logger::instance().add(new ConsoleChannel("debug", Level::Trace));
+
 
     hm::init();
 
@@ -17,7 +15,8 @@ int main(int argc, char** argv) {
 
 
 
-    sleep(444444444);
+    usleep(900000000);
+
 
     hm::exit();
 

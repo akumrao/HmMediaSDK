@@ -5,11 +5,8 @@
 #ifndef MEDIAAPP_UPLOAD_H
 #define MEDIAAPP_UPLOAD_H
 
-#include "base/logger.h"
-#include "base/thread.h"
 
-
-using namespace base;
+#include <string>
 
 
 namespace hm {

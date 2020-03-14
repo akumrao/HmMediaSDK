@@ -3,10 +3,11 @@
 //
 
 #include "HmSdkUpload.h"
-#include "base/filesystem.h"
-#include "base/platform.h"
 #include "../awsupload/hmTcpClient.h"
+#include "base/logger.h"
+#include "base/thread.h"
 
+using namespace base;
 
 /*****************************************************************************************/
 
@@ -25,6 +26,7 @@ namespace hm {
     void init( )
     {
 
+        Logger::instance().add(new ConsoleChannel("debug", Level::Trace));
 
         thread = new hmTcpClient(ip, port);
     }
