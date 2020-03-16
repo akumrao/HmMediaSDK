@@ -2,15 +2,15 @@
 // Created by root on 28/12/19.
 //
 
-#ifndef MEDIAAPP_UPLOAD_H
-#define MEDIAAPP_UPLOAD_H
+#ifndef HMSDK_UPLOAD_H
+#define HMSDK_UPLOAD_H
 
 
 #include <string>
 
 
 namespace hm {
-    //const std::string ip = "52.14.171.173";
+
 
     void init( );
 
@@ -20,6 +20,8 @@ namespace hm {
 
     void  exit( );
 
+    void UploadedPercentage(const std::string& file, const int& prog);
+ 
 
 }// end hm
 

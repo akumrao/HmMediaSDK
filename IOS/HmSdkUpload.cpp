@@ -6,6 +6,7 @@
 #include "../awsupload/hmTcpClient.h"
 #include "base/logger.h"
 #include "base/thread.h"
+#include <functional>
 
 using namespace base;
 
@@ -31,17 +32,26 @@ namespace hm {
         thread = new hmTcpClient(ip, port);
     }
 
+    
+    void UploadedPercentage(const std::string& file, const int& prog)
+    {
+        SInfo << "Percentage uploaded " << prog;
+    }
 
     void upload(  const std::string driverId, const std::string metaDataJson, const std::string file)
     {
+        using namespace std::placeholders;
+        
         thread->upload( file, driverId, metaDataJson);
         thread->start();
 
-        thread->fnUpdateProgess = [&](const std::string str, int progess) {
+        // thread->fnUpdateProgess = [&](const std::string str, int progess) {
 
-            SInfo << "Percentage uploaded " <<progess;
+        //     SInfo << "Percentage uploaded " <<progess;
 
-        };
+        // };
+
+        thread->fnUpdateProgess = std::bind(&UploadedPercentage, _1, _2);
 
     }
 
