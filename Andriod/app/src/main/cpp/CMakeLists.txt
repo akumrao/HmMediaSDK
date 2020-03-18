@@ -22,7 +22,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 # Gradle automatically packages shared libraries with your APK.
 
 add_library( # Sets the name of the library.
-        native-lib
+        libupload
 
         # Sets the library as a shared library.
         SHARED
@@ -37,6 +37,6 @@ add_library( # Sets the name of the library.
 
 
 
-target_link_libraries(native-lib
+target_link_libraries(libupload
         android
         log)
