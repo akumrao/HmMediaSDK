@@ -9,6 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 Log.d("JniHandler1", "Native Err: $msg");
-                String s = displayView.getText().toString();
+                String s = msg.toString();
                 displayView.append(s + "\n");
             }
         });
@@ -62,10 +65,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 displayView.setText("");
                 String metadata =
                         "{filename:test.mp4, gps-latitude:28.674109, gps-longitude:77.438009, timestamp:20200309194530, uploadmode:normal}";
-                String[] files = {"/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4"};
+
                 Random ran = new Random();
+                String path = getExternalFilesDir("harman").getAbsolutePath() + "/" +"test.mp4";
+                File f = new File(path);
+                Boolean b = f.isFile();
+                try {
+                    BufferedReader r = new BufferedReader(new FileReader(f));
+                    String s = r.readLine();
+                    Log.d("TAG", s);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+//                String str =
+//                String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)  + "/" + "test.mp4";
+                String[] files = {path};
                 String driverId = "Driver_" + ran.nextInt(1000);
-                upload(driverId, metadata, files);
+                upload(driverId, metadata,  files);
                 break;
             case R.id.stop:
                 stop();
