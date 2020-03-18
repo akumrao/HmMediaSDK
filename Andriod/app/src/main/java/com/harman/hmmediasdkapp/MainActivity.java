@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 Log.d("JniHandler1", "Native Err: $msg");
                 String s = displayView.getText().toString();
-                displayView.append(s + "\n");
+                displayView.append(msg + "\n");
             }
         });
     }
