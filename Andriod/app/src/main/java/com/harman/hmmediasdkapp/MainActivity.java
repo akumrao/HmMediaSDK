@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Used to load the 'native-lib' library on application startup.
     static {
-        System.loadLibrary("native-lib");
+        System.loadLibrary("libupload");
     }
 
     @Override
@@ -22,7 +22,11 @@ public class MainActivity extends AppCompatActivity {
 
         //socket.upload( filename, , metadata);
 
-        upload("Upload", metadata, "/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4");
+        //String[] files = {"/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4", "/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4"};
+
+        String[] files = {"/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4"};
+
+        upload("Driver123", metadata,files );
 
         TextView tv = findViewById(R.id.sample_text);
         tv.setText("arvind");
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
      * A function calling from JNI to update current timer
      */
     @Keep
-    private void updateTimer(final String msg ) {
+    private void uploadProcess(final String msg ) {
 
         Log.e("JniHandler1", "Native Err: " + msg);
 
@@ -53,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    public native String stringFromJNI();
+   // public native String stringFromJNI();
 
-    public native void upload(String driverid, String metadata, String path);
+    public native void upload(String driverid, String metadata, String[] path);
+
+    public native void stop();
 }

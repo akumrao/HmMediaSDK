@@ -7,6 +7,7 @@
 
 
 #include <string>
+#include <list>
 #include "Common.h"
 #include "base/logger.h"
 #include "base/thread.h"
@@ -16,13 +17,18 @@ using namespace base;
 
 namespace hm {
 
-    void init( );
+    //void init( );
 
-    void upload(  const std::string driverId, const std::string metaDataJson, const std::string file);
+    void upload(  const std::string driverId, const std::string metaDataJson, std::list < std::string > fileList  );
 
+    void cbUploadProgess(const std::string& file, const int& prog);
+
+    void cbFailure(const std::string& file, const std::string reason);
+
+    void cbSuccess(const std::string& file, const std::string reason);
     void  stop( );
 
-    void  exit( );
+   // void  exit( );
 
 
 
