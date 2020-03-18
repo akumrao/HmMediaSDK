@@ -106,7 +106,7 @@ namespace hm {
     {
         using namespace std::placeholders;
 
-
+        if(!listThread.size())
         for (std::list<std::string>::iterator it=fileList.begin(); it != fileList.end(); ++it) {
 
             SInfo << "File uploading " << *it;
@@ -134,6 +134,7 @@ namespace hm {
              hm->shutdown();
              delete hm;
         }
+        listThread.clear();
 
     }
 
