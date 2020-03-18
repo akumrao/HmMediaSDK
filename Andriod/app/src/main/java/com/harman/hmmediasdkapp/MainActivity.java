@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button buttonStart = null;
     private Button buttonStop = null;
@@ -40,14 +42,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * A function calling from JNI to update current timer
      */
     @Keep
-    private void updateTimer(final String msg) {
+    private void uploadProcess(final String msg) {
         Log.d("JniHandler1", "Native Err: " + msg);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Log.d("JniHandler1", "Native Err: $msg");
                 String s = displayView.getText().toString();
-                displayView.append(s+"\n");
+                displayView.append(s + "\n");
             }
         });
     }
@@ -59,10 +61,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.start:
                 displayView.setText("");
                 String metadata =
-                        "{filename:driver-1234-1232323.mp4, gps-latitude:28.674109, gps-longitude:77.438009, timestamp:20200309194530, uploadmode:normal}";
-                upload(
-                        "Upload", metadata,
-                        "/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4");
+                        "{filename:test.mp4, gps-latitude:28.674109, gps-longitude:77.438009, timestamp:20200309194530, uploadmode:normal}";
+                String[] files = {"/storage/emulated/0/Android/data/com.harman.hmmediasdkapp/files/Harman/test.mp4"};
+                Random ran = new Random();
+                String driverId = "Driver_" + ran.nextInt(1000);
+                upload(driverId, metadata, files);
                 break;
             case R.id.stop:
                 stop();
@@ -74,9 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    public native String stringFromJNI();
-
-    public native void upload(String driverid, String metadata, String path);
+    public native void upload(String driverid, String metadata, String[] path);
 
     public native void stop();
 }
