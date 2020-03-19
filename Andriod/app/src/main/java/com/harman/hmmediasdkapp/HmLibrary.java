@@ -21,9 +21,9 @@ public class HmLibrary {
     private HmLibrary() {
     }
 
-    public void uploadFile(String driverId, String metadata, String[] files, UploadProgress progress) {
+    public void uploadFile(String driverId, String metadata, String[] files, UploadProgress progress, String oAuthToken ) {
         uploadProgress = progress;
-        upload(driverId, metadata, files);
+        upload(driverId, metadata, files,oAuthToken);
     }
 
     public void stopUpload() {
@@ -43,7 +43,7 @@ public class HmLibrary {
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    public native void upload(String driverid, String metadata, String[] path);
+    public native void upload(String driverid, String metadata, String[] path, String oAuthToken);
 
     public native void stop();
 }

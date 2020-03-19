@@ -84,7 +84,7 @@ void   callbackJavaMsg(JNIEnv *env, jobject instance,
 //Thread *thread = nullptr;
 
 
-void   upload(JNIEnv *env, jobject instance, jstring jdriverid , jstring jmetadata, jobjectArray stringArray ) {
+void   upload(JNIEnv *env, jobject instance, jstring jdriverid , jstring jmetadata, jobjectArray stringArray, jstring oAuthToken ) {
 
     const char *c_driverid = env->GetStringUTFChars(jdriverid, NULL);
     std::string driverid = c_driverid;
@@ -135,11 +135,11 @@ void  stop(JNIEnv *env, jobject instance) {
  */
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_harman_hmmediasdkapp_HmLibrary_upload(JNIEnv *env, jobject instance ,jstring driverid , jstring metadata, jobjectArray stringArray ) {
+Java_com_harman_hmmediasdkapp_HmLibrary_upload(JNIEnv *env, jobject instance ,jstring driverid , jstring metadata, jobjectArray stringArray, jstring oAuthToken ) {
 
     LTrace("HmLibrary_upload");
 
-    upload( env, instance, driverid, metadata, stringArray);
+    upload( env, instance, driverid, metadata, stringArray, oAuthToken );
 
 }
 
