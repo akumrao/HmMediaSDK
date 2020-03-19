@@ -20,7 +20,7 @@ TickContext g_ctx;
 #define LOGE(...) \
   ((void)__android_log_print(ANDROID_LOG_ERROR, kTAG, __VA_ARGS__))t:
  *
- *   hello-jniCallback/app/src/main/java/com/example/hellojnicallback/MainActivity.java
+ *   hello-jniCallback/app/src/main/java/com/example/hellojnicallback/HmLibrary.java
  */
 
 
@@ -135,9 +135,9 @@ void  stop(JNIEnv *env, jobject instance) {
  */
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_harman_hmmediasdkapp_MainActivity_upload(JNIEnv *env, jobject instance ,jstring driverid , jstring metadata, jobjectArray stringArray ) {
+Java_com_harman_hmmediasdkapp_HmLibrary_upload(JNIEnv *env, jobject instance ,jstring driverid , jstring metadata, jobjectArray stringArray ) {
 
-    LTrace("MainActivity_upload");
+    LTrace("HmLibrary_upload");
 
     upload( env, instance, driverid, metadata, stringArray);
 
@@ -149,6 +149,6 @@ Java_com_harman_hmmediasdkapp_MainActivity_upload(JNIEnv *env, jobject instance 
  *
  */
 extern "C" JNIEXPORT void JNICALL
-Java_com_harman_hmmediasdkapp_MainActivity_stop(JNIEnv *env, jobject instance) {
+Java_com_harman_hmmediasdkapp_HmLibrary_stop(JNIEnv *env, jobject instance) {
     stop(env,instance);
 }
