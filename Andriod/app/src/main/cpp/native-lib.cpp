@@ -68,18 +68,38 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 }
 
 /*
- * A helper function to wrap java JniHelper::updateStatus(String msg)
- * JNI allow us to call this function via an instance even it is
- * private function.
+ *  Call backs
+ *
+ *
  */
-void   callbackJavaMsg(JNIEnv *env, jobject instance,
-                   jmethodID func,const char* msg) {
 
+
+void callbackJavaUploadProgess(JNIEnv *env, jobject instance,  jmethodID func,const char* file, int prog )
+{
+    jstring javafile = env->NewStringUTF( file);
+    jint javaProg = (jint)prog;
+    env->CallVoidMethod( instance, func, javafile, javaProg);
+    env->DeleteLocalRef( javafile);
+}
+
+void callbackJavaFailure(JNIEnv *env, jobject instance,  jmethodID func,const char* file, const char *msg, int code)
+{
+    jstring javaFile = env->NewStringUTF( file);
     jstring javaMsg = env->NewStringUTF( msg);
-    env->CallVoidMethod( instance, func, javaMsg);
+    jint javacode = (jint)code;
+    env->CallVoidMethod( instance, func, javaFile, javaMsg,javacode);
+    env->DeleteLocalRef( javaFile);
     env->DeleteLocalRef( javaMsg);
 }
 
+void callbackJavaSuccess(JNIEnv *env, jobject instance,  jmethodID func,const char* file, const char *msg )
+{
+    jstring javaFile = env->NewStringUTF( file);
+    jstring javaMsg = env->NewStringUTF( msg);
+    env->CallVoidMethod( instance, func, javaFile, javaMsg);
+    env->DeleteLocalRef( javaFile);
+    env->DeleteLocalRef( javaMsg);
+}
 
 //Thread *thread = nullptr;
 

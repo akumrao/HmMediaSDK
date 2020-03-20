@@ -35,7 +35,7 @@ public class HmLibrary {
      * A function calling from JNI to update current timer
      */
     @Keep
-    private void uploadProgress(final String msg) {
+    private void uploadProgress(final String msg, final int perc) {
         mFileUploadListener.uploadProgress("", 0);
         Log.d("JniHandler1", "Native : " + msg);
     }

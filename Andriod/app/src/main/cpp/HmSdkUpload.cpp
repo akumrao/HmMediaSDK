@@ -8,7 +8,13 @@
 #include "../awsupload/hmTcpClient.h"
 
 extern TickContext g_ctx;
-void callbackJavaMsg(JNIEnv *env, jobject instance,  jmethodID func,const char* msg);
+
+void callbackJavaUploadProgess(JNIEnv *env, jobject instance,  jmethodID func,const char* file, int );
+
+void callbackJavaFailure(JNIEnv *env, jobject instance,  jmethodID func,const char* file, const char *msg, int );
+
+void callbackJavaSuccess(JNIEnv *env, jobject instance,  jmethodID func,const char* file, const char *msg );
+
 /*****************************************************************************************/
 
 namespace hm {
@@ -39,10 +45,10 @@ namespace hm {
         std::string percent = file + ", Failure : " +  reason ;
 
         jmethodID timerId = env->GetMethodID( pctx->mainActivityClz,
-                                              "uploadFailure", "(Ljava/lang/String;)V");
+                                              "uploadFailure", "(Ljava/lang/String;Ljava/lang/String;I)V");
 
         if (timerId)
-            callbackJavaMsg(env, pctx->mainActivityObj, timerId, percent.c_str()  );
+            callbackJavaFailure(env, pctx->mainActivityObj, timerId, file.c_str(),  reason.c_str(), -1 );
 
 
     }
@@ -64,10 +70,10 @@ namespace hm {
         std::string percent = file + ", Success : " +  reason ;
 
         jmethodID timerId = env->GetMethodID( pctx->mainActivityClz,
-                                              "uploadSuccess", "(Ljava/lang/String;)V");
+                                              "uploadSuccess", "(Ljava/lang/String;Ljava/lang/String;)V");
 
         if (timerId)
-            callbackJavaMsg(env, pctx->mainActivityObj, timerId, percent.c_str()  );
+            callbackJavaSuccess(env, pctx->mainActivityObj, timerId, file.c_str(),  reason.c_str() );
 
 
     }
@@ -93,10 +99,10 @@ namespace hm {
         std::string percent = file + " :" +  std::to_string(prog );
 
         jmethodID timerId = env->GetMethodID( pctx->mainActivityClz,
-                                              "uploadProcess", "(Ljava/lang/String;)V",);
+                                              "uploadProgress", "(Ljava/lang/String;I)V" );
 
         if (timerId)
-            callbackJavaMsg(env, pctx->mainActivityObj, timerId, percent.c_str()  );
+            callbackJavaUploadProgess(env, pctx->mainActivityObj, timerId, file.c_str(), prog  );
 
 
     }
