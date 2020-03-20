@@ -39,7 +39,7 @@ namespace hm {
         std::string percent = file + ", Failure : " +  reason ;
 
         jmethodID timerId = env->GetMethodID( pctx->mainActivityClz,
-                                              "uploadProcess", "(Ljava/lang/String;)V");
+                                              "uploadFailure", "(Ljava/lang/String;)V");
 
         if (timerId)
             callbackJavaMsg(env, pctx->mainActivityObj, timerId, percent.c_str()  );
@@ -64,7 +64,7 @@ namespace hm {
         std::string percent = file + ", Success : " +  reason ;
 
         jmethodID timerId = env->GetMethodID( pctx->mainActivityClz,
-                                              "uploadProcess", "(Ljava/lang/String;)V");
+                                              "uploadSuccess", "(Ljava/lang/String;)V");
 
         if (timerId)
             callbackJavaMsg(env, pctx->mainActivityObj, timerId, percent.c_str()  );
@@ -93,7 +93,7 @@ namespace hm {
         std::string percent = file + " :" +  std::to_string(prog );
 
         jmethodID timerId = env->GetMethodID( pctx->mainActivityClz,
-                                              "uploadProcess", "(Ljava/lang/String;)V");
+                                              "uploadProcess", "(Ljava/lang/String;)V",);
 
         if (timerId)
             callbackJavaMsg(env, pctx->mainActivityObj, timerId, percent.c_str()  );

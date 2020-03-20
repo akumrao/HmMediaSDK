@@ -6,7 +6,7 @@ import androidx.annotation.Keep;
 
 public class HmLibrary {
     // Used to load the 'native-lib' library on application startup.
-    private UploadProgress uploadProgress;
+    private FileUploadListener mFileUploadListener;
 
     static {
         System.loadLibrary("libupload");
@@ -21,9 +21,10 @@ public class HmLibrary {
     private HmLibrary() {
     }
 
-    public void uploadFile(String driverId, String metadata, String[] files, UploadProgress progress, String oAuthToken ) {
-        uploadProgress = progress;
-        upload(driverId, metadata, files,oAuthToken);
+    public void uploadFile(String driverId, String metadata, String[] files, String oAuthToken,
+            FileUploadListener progress) {
+        mFileUploadListener = progress;
+        upload(driverId, metadata, files, oAuthToken);
     }
 
     public void stopUpload() {
@@ -34,8 +35,26 @@ public class HmLibrary {
      * A function calling from JNI to update current timer
      */
     @Keep
-    private void uploadProcess(final String msg) {
-        uploadProgress.progress(msg);
+    private void uploadProgress(final String msg) {
+        mFileUploadListener.uploadProgress("", 0);
+        Log.d("JniHandler1", "Native : " + msg);
+    }
+
+    /*
+     * A function calling from JNI to update current timer
+     */
+    @Keep
+    private void uploadSuccess(final String msg) {
+        mFileUploadListener.uploadSuccess("", msg);
+        Log.d("JniHandler1", "Native : " + msg);
+    }
+
+    /*
+     * A function calling from JNI to update current timer
+     */
+    @Keep
+    private void uploadFailure(final String msg) {
+        mFileUploadListener.uploadFailure("", msg, -1);
         Log.d("JniHandler1", "Native : " + msg);
     }
 
