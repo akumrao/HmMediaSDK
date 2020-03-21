@@ -35,27 +35,27 @@ public class HmLibrary {
      * A function calling from JNI to update current timer
      */
     @Keep
-    private void uploadProgress(final String msg, final int perc) {
-        mFileUploadListener.uploadProgress("", 0);
-        Log.d("JniHandler1", "Native : " + msg);
+    private void uploadProgress(final String fileName, final int percentage) {
+        mFileUploadListener.uploadProgress(fileName, percentage);
+        Log.d("JniHandler1", "Native : " + fileName + " percent :" + percentage);
     }
 
     /*
      * A function calling from JNI to update current timer
      */
     @Keep
-    private void uploadSuccess(final String msg) {
-        mFileUploadListener.uploadSuccess("", msg);
-        Log.d("JniHandler1", "Native : " + msg);
+    private void uploadSuccess(final String fileName, final String msg) {
+        mFileUploadListener.uploadSuccess(fileName, msg);
+        Log.d("JniHandler1", "Native : " + fileName + " msg :" + msg);
     }
 
     /*
      * A function calling from JNI to update current timer
      */
     @Keep
-    private void uploadFailure(final String msg) {
-        mFileUploadListener.uploadFailure("", msg, -1);
-        Log.d("JniHandler1", "Native : " + msg);
+    private void uploadFailure(final String fileName, final String msg, final int errCode) {
+        mFileUploadListener.uploadFailure(fileName, msg, errCode);
+        Log.d("JniHandler1", "Native : " + fileName + " msg :" + msg + " errCode: "+ errCode);
     }
 
     /**
