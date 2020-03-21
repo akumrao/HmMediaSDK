@@ -50,6 +50,8 @@ namespace hm {
         if (timerId)
             callbackJavaFailure(env, pctx->mainActivityObj, timerId, file.c_str(),  reason.c_str(), code );
 
+        stop();
+
 
     }
 
@@ -75,6 +77,7 @@ namespace hm {
         if (timerId)
             callbackJavaSuccess(env, pctx->mainActivityObj, timerId, file.c_str(),  reason.c_str() );
 
+        stop();
 
     }
 
