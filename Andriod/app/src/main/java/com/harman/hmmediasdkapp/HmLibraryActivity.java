@@ -18,36 +18,47 @@ public class HmLibraryActivity extends AppCompatActivity {
     FileUploadListener progress = new FileUploadListener() {
         @Override
         public void uploadProgress(final String filePath, final int percent) {
-            Log.d("HmLibrary", "filename :${File(filePath).name} percent :$percent");
+            Log.d(
+                    "HmLibrary",
+                    "filename :" + new File(filePath).getName() + " " + "percent :" + percent);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     binding.uploadProgress.setVisibility(View.VISIBLE);
-                    binding.uploadProgress.setText(String.format(getString(R.string.upload_progress), new File(filePath).getName(), String.valueOf(percent)));
+                    binding.uploadProgress.setText(
+                            String.format(getString(R.string.upload_progress),
+                                    new File(filePath).getName(), String.valueOf(percent)));
                 }
             });
         }
 
         @Override
         public void uploadSuccess(final String filePath, final String msg) {
-            Log.d("HmLibrary", "filename :${File(filePath).name} reason :$msg");
+            Log.d(
+                    "HmLibrary",
+                    "filename :" + new File(filePath).getName() + " " + "reason :" + msg);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     binding.uploadSuccess.setVisibility(View.VISIBLE);
-                    binding.uploadSuccess.setText(String.format(getString(R.string.success_info), new File(filePath).getName(), msg));
+                    binding.uploadSuccess.setText(String.format(getString(R.string.success_info),
+                            new File(filePath).getName(), msg));
                 }
             });
         }
 
         @Override
         public void uploadFailure(final String filePath, final String msg, final int errorCode) {
-            Log.d("HmLibrary", "filename :${File(filePath).name} reason :$msg errorCode :$errorCode");
+            Log.d(
+                    "HmLibrary",
+                    "filename :" + new File(filePath).getName() + " " + "reason :" + msg
+                            + " errorCode :" + errorCode);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     binding.uploadFailure.setVisibility(View.VISIBLE);
-                    binding.uploadFailure.setText(String.format(getString(R.string.failure_info), new File(filePath).getName(), msg, String.valueOf(errorCode)));
+                    binding.uploadFailure.setText(String.format(getString(R.string.failure_info),
+                            new File(filePath).getName(), msg, String.valueOf(errorCode)));
                 }
             });
         }
