@@ -28,7 +28,7 @@ namespace hm {
     std::list<hmTcpClient*> listThread ;
 
 
-    void cbFailure(const std::string& file, const std::string reason)
+    void cbFailure(const std::string& file, const std::string &reason, const int &code )
     {
         TickContext *pctx = (TickContext*) &g_ctx;
         JavaVM *javaVM = pctx->javaVM;
@@ -48,12 +48,12 @@ namespace hm {
                                               "uploadFailure", "(Ljava/lang/String;Ljava/lang/String;I)V");
 
         if (timerId)
-            callbackJavaFailure(env, pctx->mainActivityObj, timerId, file.c_str(),  reason.c_str(), -1 );
+            callbackJavaFailure(env, pctx->mainActivityObj, timerId, file.c_str(),  reason.c_str(), code );
 
 
     }
 
-    void cbSuccess(const std::string& file, const std::string reason)
+    void cbSuccess(const std::string& file, const std::string &reason)
     {
         TickContext *pctx = (TickContext*) &g_ctx;
         JavaVM *javaVM = pctx->javaVM;
@@ -79,7 +79,7 @@ namespace hm {
     }
 
 
-     void cbUploadProgess(const std::string& file, const int& prog)
+    void cbUploadProgess(const std::string& file, const int& prog)
     {
         SInfo << "Percentage uploaded " <<prog;
 
@@ -113,20 +113,20 @@ namespace hm {
         using namespace std::placeholders;
 
         if(!listThread.size())
-        for (std::list<std::string>::iterator it=fileList.begin(); it != fileList.end(); ++it) {
+            for (std::list<std::string>::iterator it=fileList.begin(); it != fileList.end(); ++it) {
 
-            SInfo << "File uploading " << *it;
+                SInfo << "File uploading " << *it;
 
-            hmTcpClient *thread = new hmTcpClient(ip, port);
+                hmTcpClient *thread = new hmTcpClient(ip, port);
 
-            thread->upload(*it, driverId, metaDataJson);
-            thread->start();
+                thread->upload(*it, driverId, metaDataJson);
+                thread->start();
 
-            listThread.push_back(thread);
-            thread->fnUpdateProgess = std::bind(&cbUploadProgess, _1, _2);
-            thread->fnSuccess = std::bind(&cbSuccess, _1, _2);
-            thread->fnFailure = std::bind(&cbFailure, _1, _2);
-        }
+                listThread.push_back(thread);
+                thread->fnUpdateProgess = std::bind(&cbUploadProgess, _1, _2);
+                thread->fnSuccess = std::bind(&cbSuccess, _1, _2);
+                thread->fnFailure = std::bind(&cbFailure, _1, _2, _3);
+            }
 
 
     }
@@ -134,11 +134,11 @@ namespace hm {
     void  stop( )
     {
 
-         for (std::list<hmTcpClient*>::iterator it=listThread.begin(); it != listThread.end(); ++it) {
+        for (std::list<hmTcpClient*>::iterator it=listThread.begin(); it != listThread.end(); ++it) {
 
-             hmTcpClient *hm =   *it;
-             hm->shutdown();
-             delete hm;
+            hmTcpClient *hm =   *it;
+            hm->shutdown();
+            delete hm;
         }
         listThread.clear();
 

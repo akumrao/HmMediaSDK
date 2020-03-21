@@ -23,9 +23,9 @@ namespace hm {
 
     void cbUploadProgess(const std::string& file, const int& prog);
 
-    void cbFailure(const std::string& file, const std::string reason);
+    void cbFailure(const std::string& file, const std::string &reason, const int &code );
 
-    void cbSuccess(const std::string& file, const std::string reason);
+    void cbSuccess(const std::string& file, const std::string &reason);
     void  stop( );
 
    // void  exit( );
