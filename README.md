@@ -7,6 +7,10 @@ for git 2.3 later git clone --recurse-submoduleshttps://github.com/akumrao/HmMed
 
 git submodule update --init
 
+cd HmMediaSDK/Andriod/app/src/main/cpp/mediaserver
+git checkout master
+git pull
+
 open project  Andriod at Android studio
 
 Manifest changes
