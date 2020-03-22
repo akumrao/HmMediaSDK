@@ -21,7 +21,7 @@ namespace hm {
 
 
     const std::string ip = "18.228.58.178";
-   // const std::string ip = "192.168.0.2";
+  //  const std::string ip = "192.168.0.4";
 
     const int port = 47001;
 
@@ -110,9 +110,12 @@ namespace hm {
 
     }
 
+    std::mutex g_num_mutex;
 
     void upload(  const std::string driverId, const std::string metaDataJson, std::list < std::string > fileList  )
     {
+        std::lock_guard<std::mutex> guard(g_num_mutex);
+
         using namespace std::placeholders;
 
         if(!listThread.size())
@@ -134,16 +137,29 @@ namespace hm {
 
     }
 
+
+
     void  stop( )
     {
+        LInfo("hm::stop")
+        std::lock_guard<std::mutex> guard(g_num_mutex);
 
-        for (std::list<hmTcpClient*>::iterator it=listThread.begin(); it != listThread.end(); ++it) {
+
+        for (std::list<hmTcpClient*>::iterator it = listThread.begin() ; it != listThread.end(); ++it)
+        {
+
 
             hmTcpClient *hm =   *it;
+
+          //  listThread.erase( it );
+
+
             hm->shutdown();
             delete hm;
         }
         listThread.clear();
+
+
 
     }
 
