@@ -6,6 +6,7 @@
 #include "base/filesystem.h"
 #include "base/platform.h"
 #include "../awsupload/hmTcpClient.h"
+#include <thread>
 
 extern TickContext g_ctx;
 
@@ -30,6 +31,8 @@ namespace hm {
 
     void cbFailure(const std::string& file, const std::string &reason, const int &code )
     {
+        SInfo << "Uploade failure ";
+
         TickContext *pctx = (TickContext*) &g_ctx;
         JavaVM *javaVM = pctx->javaVM;
         JNIEnv *env;
@@ -50,13 +53,16 @@ namespace hm {
         if (timerId)
             callbackJavaFailure(env, pctx->mainActivityObj, timerId, file.c_str(),  reason.c_str(), code );
 
-        stop();
+        std::thread th(&stop) ;
+        th.detach();
 
 
     }
 
     void cbSuccess(const std::string& file, const std::string &reason)
     {
+        SInfo << "Uploade Suceess ";
+
         TickContext *pctx = (TickContext*) &g_ctx;
         JavaVM *javaVM = pctx->javaVM;
         JNIEnv *env;
@@ -77,7 +83,9 @@ namespace hm {
         if (timerId)
             callbackJavaSuccess(env, pctx->mainActivityObj, timerId, file.c_str(),  reason.c_str() );
 
-        stop();
+
+        std::thread th(&stop) ;
+        th.detach();
 
     }
 
@@ -134,7 +142,6 @@ namespace hm {
                 thread->fnFailure = std::bind(&cbFailure, _1, _2, _3);
             }
 
-
     }
 
 
@@ -148,13 +155,11 @@ namespace hm {
         for (std::list<hmTcpClient*>::iterator it = listThread.begin() ; it != listThread.end(); ++it)
         {
 
-
             hmTcpClient *hm =   *it;
-
           //  listThread.erase( it );
 
-
             hm->shutdown();
+            hm->join();
             delete hm;
         }
         listThread.clear();

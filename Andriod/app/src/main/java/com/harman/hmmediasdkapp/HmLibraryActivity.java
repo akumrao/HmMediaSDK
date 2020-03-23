@@ -82,7 +82,7 @@ public class HmLibraryActivity extends AppCompatActivity {
         String path5 = getExternalFilesDir("harman").getAbsolutePath() + "/" + "test1.o";
 
 
-        final String[] files = new String[]{path5};
+        final String[] files = new String[]{ path3};
         final String driverId = "Driver_1234";
         binding.start.setOnClickListener(new View.OnClickListener() {
             @Override
