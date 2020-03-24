@@ -76,13 +76,14 @@ public class HmLibraryActivity extends AppCompatActivity {
 
         String path2 = getExternalFilesDir("harman").getAbsolutePath() + "/" + "2.mp4";
 
-        String path3 = getExternalFilesDir("harman").getAbsolutePath() + "/" + "test.mp4";
-        String path4 = getExternalFilesDir("harman").getAbsolutePath() + "/" + "test.txt";
+        String path3 = getExternalFilesDir("harman").getAbsolutePath() + "/" + "3.mp4";
 
-        String path5 = getExternalFilesDir("harman").getAbsolutePath() + "/" + "test1.o";
+        String path4 = getExternalFilesDir("harman").getAbsolutePath() + "/" + "test.mp4";
+
+        String path5 = getExternalFilesDir("harman").getAbsolutePath() + "/" + "xab.mp4";
 
 
-        final String[] files = new String[]{ path3};
+        final String[] files = new String[]{ path1,path2 };
         final String driverId = "Driver_1234";
         binding.start.setOnClickListener(new View.OnClickListener() {
             @Override

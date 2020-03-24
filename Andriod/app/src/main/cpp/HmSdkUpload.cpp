@@ -22,12 +22,19 @@ namespace hm {
 
 
     const std::string ip = "18.228.58.178";
-  //  const std::string ip = "192.168.0.4";
+    //const std::string ip = "192.168.0.2";
 
     const int port = 47001;
 
-    std::list<hmTcpClient*> listThread ;
 
+    struct UploadSt
+    {
+        std::string driverId;
+        std::string metaDataJson;
+        std::string file;
+        hmTcpClient *thread;
+    } ;
+    std::queue<UploadSt> listThread ;
 
     void cbFailure(const std::string& file, const std::string &reason, const int &code )
     {
@@ -126,20 +133,32 @@ namespace hm {
 
         using namespace std::placeholders;
 
+        int count =0;
         if(!listThread.size())
             for (std::list<std::string>::iterator it=fileList.begin(); it != fileList.end(); ++it) {
 
                 SInfo << "File uploading " << *it;
 
-                hmTcpClient *thread = new hmTcpClient(ip, port);
+                UploadSt st;
+                st.driverId = driverId;
+                st.metaDataJson = metaDataJson;
+                st.file = *it;
 
-                thread->upload(*it, driverId, metaDataJson);
-                thread->start();
+                if(!count) {
+                    hmTcpClient *thread = new hmTcpClient(ip, port);
+                    st.thread = thread;
+                    thread->upload(*it, driverId, metaDataJson);
 
-                listThread.push_back(thread);
-                thread->fnUpdateProgess = std::bind(&cbUploadProgess, _1, _2);
-                thread->fnSuccess = std::bind(&cbSuccess, _1, _2);
-                thread->fnFailure = std::bind(&cbFailure, _1, _2, _3);
+                    thread->fnUpdateProgess = std::bind(&cbUploadProgess, _1, _2);
+                    thread->fnSuccess = std::bind(&cbSuccess, _1, _2);
+                    thread->fnFailure = std::bind(&cbFailure, _1, _2, _3);
+
+                    thread->start();
+                }
+
+                listThread.push(st);
+
+                ++count;
             }
 
     }
@@ -148,21 +167,39 @@ namespace hm {
 
     void  stop( )
     {
+        using namespace std::placeholders;
+
         LInfo("hm::stop")
         std::lock_guard<std::mutex> guard(g_num_mutex);
 
+        if(listThread.size() ) {
 
-        for (std::list<hmTcpClient*>::iterator it = listThread.begin() ; it != listThread.end(); ++it)
-        {
+            UploadSt st = listThread.front();
+            st.thread->shutdown();
+            st.thread->join();
+            delete st.thread;
 
-            hmTcpClient *hm =   *it;
-          //  listThread.erase( it );
-
-            hm->shutdown();
-            hm->join();
-            delete hm;
+            listThread.pop();
         }
-        listThread.clear();
+
+        if(listThread.size() ) {
+
+            UploadSt st = listThread.front();
+
+
+            hmTcpClient *thread = new hmTcpClient(ip, port);
+            st.thread = thread;
+            thread->upload(st.file, st.driverId , st.metaDataJson);
+
+            thread->fnUpdateProgess = std::bind(&cbUploadProgess, _1, _2);
+            thread->fnSuccess = std::bind(&cbSuccess, _1, _2);
+            thread->fnFailure = std::bind(&cbFailure, _1, _2, _3);
+
+            thread->start();
+
+           }
+
+
 
 
 

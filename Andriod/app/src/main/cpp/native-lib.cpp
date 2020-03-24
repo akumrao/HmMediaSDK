@@ -49,7 +49,7 @@ void queryRuntimeInfo(JNIEnv *env, jobject instance) {
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 
     Logger::instance().add(new RemoteChannel("debug", Level::Remote, "10.99.109.11"));
-
+    Logger::instance().setWriter(new AsyncLogWriter);
 
     LTrace("jint");
 
