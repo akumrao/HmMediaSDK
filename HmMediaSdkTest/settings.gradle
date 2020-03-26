@@ -1,0 +1,2 @@
+rootProject.name='Test sdk'
+include ':app', ':HmMediaSdk'
