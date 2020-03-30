@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">HmMediaSDKApp</string>
+    <string name="upload_progress">fileName: %1$s, percent: %2$s</string>
+    <string name="success_info">fileName: %1$s reason: %2$s</string>
+    <string name="failure_info">fileName: %1$s, \nreason: %2$s,\n errorcode: %3$s</string>
+</resources>
