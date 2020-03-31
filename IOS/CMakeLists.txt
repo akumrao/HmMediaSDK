@@ -3,7 +3,17 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
+set(CMAKE_CXX_STANDARD 14)	
+
 cmake_minimum_required(VERSION 3.4.1)
+
+set(CMAKE_C_COMPILER "clang")
+set(CMAKE_CXX_COMPILER clang++)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+project(hmSdkUpload)
 
 
 include_directories(./mediaserver/src/base/include ./mediaserver/src/net/src/net/awsupload/ ./mediaserver/src/http_parser ./mediaserver/src/crypto/include ./mediaserver/src/json/include ./mediaserver/src/net/include  ./mediaserver/src/libuv/include ./mediaserver/src/libuv/src ./mediaserver/src/libuv/src/unix )
