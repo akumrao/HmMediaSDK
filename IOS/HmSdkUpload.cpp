@@ -24,13 +24,6 @@ namespace hm {
 
     hmTcpClient *thread = nullptr ;
 
-    void init( )
-    {
-
-        Logger::instance().add(new ConsoleChannel("debug", Level::Trace));
-
-        thread = new hmTcpClient(ip, port);
-    }
 
     
     void UploadedPercentage(const std::string& file, const int& prog)
@@ -38,36 +31,59 @@ namespace hm {
         SInfo << "Percentage uploaded " << prog;
     }
 
+
+    void cbFailure(const std::string& file, const std::string &reason, const int &code )
+    {
+        SInfo << "Uploade failure. "  <<  reason;
+
+    }
+
+    void cbSuccess(const std::string& file, const std::string &reason)
+    {
+        SInfo << "Uploade Suceess. "  << reason;
+    }
+
+
     void upload(  const std::string driverId, const std::string metaDataJson, const std::string file)
     {
         using namespace std::placeholders;
-        
-        thread->upload( file, driverId, metaDataJson);
-        thread->start();
 
-        // thread->fnUpdateProgess = [&](const std::string str, int progess) {
 
-        //     SInfo << "Percentage uploaded " <<progess;
+        Logger::instance().add(new ConsoleChannel("debug", Level::Trace));
 
-        // };
+        if(!thread)
+        {
 
-        thread->fnUpdateProgess = std::bind(&UploadedPercentage, _1, _2);
+            SInfo << "driverId " << driverId  <<  " metaDataJson " << metaDataJson  <<  " file "  << file;
+
+            thread = new hmTcpClient(ip, port);
+            
+            thread->upload( file, driverId, metaDataJson);
+            thread->start();
+
+      
+            thread->fnUpdateProgess = std::bind(&UploadedPercentage, _1, _2);
+            
+            thread->fnSuccess = std::bind(&cbSuccess, _1, _2);
+            thread->fnFailure = std::bind(&cbFailure, _1, _2, _3);
+
+        }
 
     }
 
     void  stop( )
     {
-
-        thread->stop();
-
+        if(thread)
+        {
+            thread->stop();
+            delete thread;
+            thread = nullptr;
+        }
     }
 
 
 
-    void  exit( )
-    {
-        delete thread;
-    }
+   
 
 }// end hm
 
