@@ -38,6 +38,7 @@ run app from Android Studio
 
 *IOS Build*
 
+brew install cmake
 
 To build source code git clone --recursive https://github.com/akumrao/HmMediaSDK.git
 
@@ -45,7 +46,12 @@ for git 2.3 later git clone --recurse-submoduleshttps://github.com/akumrao/HmMed
 
 git submodule update --init
 
+cd IOS/mediaserver
+
 cd IOS/
+
+git checkout master
+git pull
 
 mkdir build
 
@@ -55,7 +61,7 @@ cmake ..
 
 cd ..
 
-cp libhmSdkUpload.so form build folder   and  cp test.mp4 from any location
+cp test.mp4 from any location
 
 make
 
