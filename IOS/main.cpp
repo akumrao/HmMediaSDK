@@ -2,11 +2,12 @@
 
 #include "HmSdkUpload.h"
 #include <unistd.h>
+#include <iostream>
 
 int main(int argc, char** argv) {
 
+    hm::stop();
 
-    hm::init();
 
     std::string file = "./test.mp4"; //complete path
     
@@ -14,12 +15,23 @@ int main(int argc, char** argv) {
 
     hm::upload("driver-1234", metadata, file);
 
+    usleep(9000000);
+    std::cout << "first upload done" << std::endl;
+    hm::stop();
+    std::cout << "stop done" << std::endl;
 
+    usleep(900000);
 
-    usleep(900000000);
+    std::cout << "second upload start" << std::endl;
 
+    hm::upload("driver-1234", metadata, file);
 
-    hm::exit();
+    usleep(9000000);
+
+    std::cout << "second upload done" << std::endl;
+
+    hm::stop();
+
 
     return 0;
 }

@@ -7,6 +7,7 @@
 #include "base/logger.h"
 #include "base/thread.h"
 #include <functional>
+#include <thread>
 
 using namespace base;
 
@@ -15,9 +16,9 @@ using namespace base;
 namespace hm {
 
 
-    const std::string ip = "18.228.58.178";
+    //const std::string ip = "18.228.58.178";
     //const std::string ip = "127.0.0.1";
-    //const std::string ip = "10.99.234.1";
+    const std::string ip = "192.168.0.6";
 
     const int port = 47001;
 
@@ -70,14 +71,25 @@ namespace hm {
         }
 
     }
+     
+    void exitit()
+    {
+	if(thread)
+	{
+          SInfo << "hm::exit() ";
+          thread->shutdown();
+          thread->join();
+          delete thread;
+          thread = nullptr;
+        }
+    }
 
     void  stop( )
     {
         if(thread)
         {
-            thread->stop();
-            delete thread;
-            thread = nullptr;
+           std::thread th(&exitit) ;
+           th.detach();     
         }
     }
 
