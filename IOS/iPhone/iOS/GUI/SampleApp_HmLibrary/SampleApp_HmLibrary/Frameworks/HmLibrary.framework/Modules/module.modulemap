@@ -1,0 +1,11 @@
+framework module HmLibrary {
+  umbrella header "HmLibrary.h"
+
+  export *
+  module * { export * }
+}
+
+module HmLibrary.Swift {
+    header "HmLibrary-Swift.h"
+    requires objc
+}
